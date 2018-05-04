@@ -33,15 +33,15 @@ for j in range(len(keys)):
     y = homo.Homodyne_with_noise(phi_signal=keys[j],phi_LO = [0,2*np.pi],trials = 1000,\
                             phi_LO_grid=1200)
     y = sess.run(y)
-    for k in range(1000): #no of training data per key
+    for k in range(400): #no of training data per key
         #one_hot = sess.run(tf.one_hot(j,4))
         one_hot = np.zeros(4)
         #one_hot = np.zeros(2)
         one_hot[j] = 1.
         means_homo = norm([random.choice(i) for i in y])
         train_data.append([means_homo,one_hot])
-    f = open('keys_{}.pkl'.format(j+1),'wb')
-    #f = open('keys_{}_test.pkl'.format(j+1),'wb')
+    #f = open('keys_{}.pkl'.format(j+1),'wb')
+    f = open('keys_{}_test.pkl'.format(j+1),'wb')
     pkl.dump(train_data,f,-1)
     f.close()
     ##means_homo = pp.scale(np.array(means_homo))
