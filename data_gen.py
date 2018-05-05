@@ -6,6 +6,12 @@ from sklearn import preprocessing as pp
 import main_Homo as m
 import random
 import _pickle as pkl
+import sys
+upto_x = int(sys.argv[1])
+
+n = int(sys.argv[2])
+
+
 def norm(data,minm=0,maxm=1):
     data = (data - np.min(data))/(np.max(data)-np.min(data))
     data = data*(maxm-minm)+minm
@@ -30,18 +36,18 @@ c = ['b','r','g','k']
 #k = 0
 for j in range(len(keys)):
     train_data = []
-    y = homo.Homodyne_with_noise(phi_signal=keys[j],phi_LO = [0,2*np.pi],trials = 1000,\
-                            phi_LO_grid=1200)
+    y = homo.Homodyne_with_noise(phi_signal=keys[j],phi_LO = [0,n*np.pi/10],trials = 1000,\
+                            phi_LO_grid=upto_x)
     y = sess.run(y)
-    for k in range(400): #no of training data per key
+    for k in range(500): #no of training data per key
         #one_hot = sess.run(tf.one_hot(j,4))
         one_hot = np.zeros(4)
         #one_hot = np.zeros(2)
         one_hot[j] = 1.
         means_homo = norm([random.choice(i) for i in y])
         train_data.append([means_homo,one_hot])
-    #f = open('keys_{}.pkl'.format(j+1),'wb')
-    f = open('keys_{}_test.pkl'.format(j+1),'wb')
+    f = open('keys_{}.pkl'.format(j+1),'wb')
+    #f = open('keys_{}_test.pkl'.format(j+1),'wb')
     pkl.dump(train_data,f,-1)
     f.close()
     ##means_homo = pp.scale(np.array(means_homo))

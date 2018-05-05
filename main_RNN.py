@@ -183,14 +183,14 @@ class Local_Rnn_LSTM(object):
             
             elif Network == 'Regression':
             ###-------------------------Regression-----------------------------------------
-                out_reg = self.Build_Regression(X,X_len=720,out_neurons=4)
+                out_reg = self.Build_Regression(X,X_len=self.time_steps,out_neurons=4)
                 Loss = tf.reduce_mean(tf.square(out_reg-Y))
                 prediction_series = out_reg           
             #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             elif Network == 'DNN_LSTM':
             ###--------------------DNN+LSTM-------------------------------------------------
-                outputs = self.Build_DNN(X,X_len = 1200,hidden_neurons = 1500,out_neurons=4)
+                outputs = self.Build_DNN(X,X_len = self.time_steps,hidden_neurons = 1500,out_neurons=4)
                 #X_in = tf.reshape(outputs,[-1,self.time_steps,self.num_inputs])
                 X_in = tf.reshape(outputs,[-1,4,self.num_inputs])
                 weights = {'final': tf.Variable(tf.random_normal([self.hidden_units,\
@@ -279,12 +279,9 @@ class Local_Rnn_LSTM(object):
                 if accu[0] >= accu_list_only[-1]:
                     accu_plot.append(accu[0])
                 else:
-                    accu_plot.append(None)
+                    #accu_plot.append(None) #this will bypass the acc_fluctuation
+                    accu_plot.append(accu[0])
                 if accu[0] > np.max(accu_list_only):
-                    #f = open('Pre_trained_Network.pkl','wb')
-                    #pre_train_net = sess.run([accuracy],feed_dict={X,Y})
-                    #pkl.dump(pre_train_net,f,-1)
-                    #f.close()
                     saver.save(sess,'/home/slohani/Desktop/Dec_20_corrected/QPSK/pre_trained_net')
                 else:
                     pass
